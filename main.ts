@@ -10,9 +10,14 @@ function StageOne () {
     tiles.placeOnRandomTile(Ladder, sprites.dungeon.darkGroundNorthWest0)
     tiles.placeOnRandomTile(mySprite, assets.tile`transparency16`)
 }
+info.onCountdownEnd(function () {
+    info.changeLifeBy(-1)
+    info.startCountdown(15)
+})
 function StageThree () {
-    tiles.setTilemap(tilemap`level4`)
+    tiles.setTilemap(tilemap`level3`)
     Ladder.destroy()
+    BOSS = sprites.create(assets.image`Boss`, SpriteKind.Enemy)
 }
 function StageTwo () {
     tiles.setTilemap(tilemap`level2`)
@@ -29,7 +34,10 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
         music.powerUp.play()
         info.changeScoreBy(1)
         PIZZA.setPosition(randint(0, 160), randint(0, 120))
-        info.startCountdown(10)
+        info.startCountdown(20)
+        if (info.life() < 3) {
+            info.changeLifeBy(1)
+        }
     }
 })
 function SetStage () {
@@ -41,6 +49,7 @@ function SetStage () {
         StageThree()
     }
 }
+let BOSS: Sprite = null
 let Stage = 0
 let Ladder: Sprite = null
 let mySprite: Sprite = null
