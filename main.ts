@@ -2,13 +2,23 @@ namespace SpriteKind {
     export const Stair = SpriteKind.create()
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Stair, function (sprite, otherSprite) {
+    Stage += 1
+    SetStage()
+})
+function StageOne () {
+    tiles.setTilemap(tilemap`Level1`)
+    tiles.placeOnRandomTile(Ladder, sprites.dungeon.darkGroundNorthWest0)
+    tiles.placeOnRandomTile(mySprite, assets.tile`transparency16`)
+}
+function StageThree () {
+    tiles.setTilemap(tilemap`level4`)
+    Ladder.destroy()
+}
+function StageTwo () {
     tiles.setTilemap(tilemap`level2`)
     mySprite.setPosition(8, 8)
     Ladder.setPosition(246, 8)
-})
-info.onCountdownEnd(function () {
-	
-})
+}
 info.onLifeZero(function () {
     game.over(false)
     info.stopCountdown()
@@ -22,10 +32,19 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
         info.startCountdown(10)
     }
 })
+function SetStage () {
+    if (Stage == 1) {
+        StageOne()
+    } else if (Stage == 2) {
+        StageTwo()
+    } else {
+        StageThree()
+    }
+}
+let Stage = 0
 let Ladder: Sprite = null
 let mySprite: Sprite = null
 let PIZZA: Sprite = null
-tiles.setTilemap(tilemap`Level1`)
 PIZZA = sprites.create(assets.image`Pizza`, SpriteKind.Food)
 mySprite = sprites.create(assets.image`Player`, SpriteKind.Player)
 Ladder = sprites.create(assets.image`Ladder`, SpriteKind.Stair)
@@ -104,7 +123,7 @@ mySprite,
 true
 )
 controller.moveSprite(mySprite)
-tiles.placeOnRandomTile(mySprite, assets.tile`transparency16`)
 scene.cameraFollowSprite(mySprite)
-tiles.placeOnRandomTile(Ladder, sprites.dungeon.darkGroundNorthWest0)
 info.setLife(3)
+Stage = 1
+SetStage()
