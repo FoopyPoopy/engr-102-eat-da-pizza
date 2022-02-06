@@ -89,13 +89,13 @@ function StageOne () {
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (Direction == 270) {
-        projectile = sprites.createProjectileFromSprite(assets.image`Arrow2`, mySprite, -50, 0)
+        projectile = sprites.createProjectileFromSprite(, mySprite, -50, 0)
     } else if (Direction == 90) {
-        projectile = sprites.createProjectileFromSprite(assets.image`Arrow1`, mySprite, 50, 0)
+        projectile = sprites.createProjectileFromSprite(, mySprite, 50, 0)
     } else if (Direction == 180) {
-        projectile = sprites.createProjectileFromSprite(assets.image`Arrow0`, mySprite, 0, -50)
+        projectile = sprites.createProjectileFromSprite(, mySprite, 0, -50)
     } else {
-        projectile = sprites.createProjectileFromSprite(assets.image`Arrow`, mySprite, 0, 50)
+        projectile = sprites.createProjectileFromSprite(, mySprite, 0, 50)
     }
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -462,3 +462,4 @@ scene.cameraFollowSprite(mySprite)
 info.setLife(3)
 Stage = 1
 SetStage()
+image.screenImage().drawRect(50, 50, 10, 1, 0)
