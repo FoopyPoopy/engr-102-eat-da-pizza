@@ -84,7 +84,6 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Stair, function (sprite, otherSp
 })
 function StageOne () {
     tiles.setTilemap(tilemap`Level1`)
-    tiles.placeOnRandomTile(Ladder, sprites.dungeon.darkGroundNorthWest0)
     tiles.placeOnRandomTile(mySprite, assets.tile`transparency16`)
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -376,13 +375,12 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
 let BOSS: Sprite = null
 let projectile: Sprite = null
 let Direction = 0
-let Stage = 0
 let Ladder: Sprite = null
+let Stage = 0
 let mySprite: Sprite = null
 let PIZZA: Sprite = null
 PIZZA = sprites.create(assets.image`Pizza`, SpriteKind.Food)
 mySprite = sprites.create(assets.image`Player`, SpriteKind.Player)
-Ladder = sprites.create(assets.image`Ladder`, SpriteKind.Stair)
 animation.runImageAnimation(
 mySprite,
 [img`
@@ -462,3 +460,11 @@ scene.cameraFollowSprite(mySprite)
 info.setLife(3)
 Stage = 1
 SetStage()
+while (true) {
+    pause(100)
+    if (info.score() == 25) {
+        Ladder = sprites.create(assets.image`Ladder`, SpriteKind.Stair)
+        tiles.placeOnRandomTile(Ladder, sprites.dungeon.darkGroundNorthWest0)
+        break;
+    }
+}
