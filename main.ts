@@ -461,5 +461,6 @@ controller.moveSprite(mySprite)
 scene.cameraFollowSprite(mySprite)
 info.setLife(3)
 Stage = 1
+image.screenImage().drawRect(50, 108, 10, 20, 0)
 SetStage()
 image.screenImage().drawRect(50, 50, 10, 1, 0)
