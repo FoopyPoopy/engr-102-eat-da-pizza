@@ -3,16 +3,48 @@ class SpriteKind:
     Stair = SpriteKind.create()
 
 def on_on_overlap(sprite, otherSprite):
+    global Stage
+    Stage += 1
+    SetStage()
+sprites.on_overlap(SpriteKind.player, SpriteKind.Stair, on_on_overlap)
+
+def StageOne():
+    tiles.set_tilemap(tilemap("""
+        Level1
+    """))
+    tiles.place_on_random_tile(Ladder, sprites.dungeon.dark_ground_north_west0)
+    tiles.place_on_random_tile(mySprite, assets.tile("""
+        transparency16
+    """))
+
+def on_a_pressed():
+    global projectile
+    projectile = sprites.create_projectile_from_sprite(assets.image("""
+        Arrow
+    """), mySprite, 0, 50)
+controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
+
+def on_countdown_end():
+    info.change_life_by(-1)
+    info.start_countdown(15)
+info.on_countdown_end(on_countdown_end)
+
+def StageThree():
+    global BOSS
+    tiles.set_tilemap(tilemap("""
+        level3
+    """))
+    Ladder.destroy()
+    BOSS = sprites.create(assets.image("""
+        Boss
+    """), SpriteKind.enemy)
+    info.set_life(3)
+def StageTwo():
     tiles.set_tilemap(tilemap("""
         level2
     """))
     mySprite.set_position(8, 8)
     Ladder.set_position(246, 8)
-sprites.on_overlap(SpriteKind.player, SpriteKind.Stair, on_on_overlap)
-
-def on_countdown_end():
-    pass
-info.on_countdown_end(on_countdown_end)
 
 def on_life_zero():
     game.over(False)
@@ -25,15 +57,30 @@ def on_on_overlap2(sprite2, otherSprite2):
         music.power_up.play()
         info.change_score_by(1)
         PIZZA.set_position(randint(0, 160), randint(0, 120))
-        info.start_countdown(10)
+        info.start_countdown(20)
+        if info.life() < 3:
+            info.change_life_by(1)
 sprites.on_overlap(SpriteKind.player, SpriteKind.food, on_on_overlap2)
 
+def SetStage():
+    if Stage == 1:
+        StageOne()
+    elif Stage == 2:
+        StageTwo()
+    else:
+        StageThree()
+
+def on_on_overlap3(sprite3, otherSprite3):
+    otherSprite3.destroy()
+    game.over(True)
+sprites.on_overlap(SpriteKind.projectile, SpriteKind.enemy, on_on_overlap3)
+
+BOSS: Sprite = None
+projectile: Sprite = None
+Stage = 0
 Ladder: Sprite = None
 mySprite: Sprite = None
 PIZZA: Sprite = None
-tiles.set_tilemap(tilemap("""
-    Level1
-"""))
 PIZZA = sprites.create(assets.image("""
     Pizza
 """), SpriteKind.food)
@@ -119,9 +166,7 @@ animation.run_image_animation(mySprite,
     500,
     True)
 controller.move_sprite(mySprite)
-tiles.place_on_random_tile(mySprite, assets.tile("""
-    transparency16
-"""))
 scene.camera_follow_sprite(mySprite)
-tiles.place_on_random_tile(Ladder, sprites.dungeon.dark_ground_north_west0)
 info.set_life(3)
+Stage = 1
+SetStage()
